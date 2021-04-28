@@ -1,16 +1,18 @@
 extends Node
 
 
-enum _States {HERO, ATTACK, ENEMY, END}
+enum _States {HERO, ATTACK, ENEMY, WIN, LOSE}
 
 const _WIN_TEXT = """Congratulations!
 You win!"""
+const _LOSE_TEXT = """Oh no!
+You lost!"""
 
 var _state:int
 var _attacker:Button
 var _has_attacked := [false, false, false, false]
-var _num_attacks:int = 0
 var _previously_attacked:Sprite
+var _is_dead := [false, false, false, false]
 
 onready var _enemies = $Sprites/Enemies
 onready var _flavor_panel = $UI/FlavorPanel
@@ -24,6 +26,7 @@ func _ready() -> void:
 	for s in _slots.get_children():
 		s.connect("focus_entered", self, "_on_slot_focus_entered", [s])
 		s.connect("attack_pressed", self, "_on_attack_pressed", [s])
+		s.connect("hero_died", self, "_on_hero_died", [s])
 	_previously_attacked = _enemies.get_child(0)
 	var last_enemy = _enemies.get_child_count() - 1
 	for e in _enemies.get_children():
@@ -71,17 +74,30 @@ func _change_state(s:int) -> void:
 			for e in _enemies.get_children():
 				e.button.focus_mode = Control.FOCUS_NONE
 				e.button.disabled = true
-				_slots.get_child(randi()%_slots.get_child_count()).damage(e.data.attack_power)
-			_num_attacks = 0
-			_has_attacked = [false, false, false, false]
+				var r = randi()%_slots.get_child_count()
+				while _is_dead[r]:
+					r = randi()%_slots.get_child_count()
+				_slots.get_child(r).damage(e.data.attack_power)
+			_has_attacked = _is_dead.duplicate()
 			_change_state(_States.HERO)
-		_States.END:
-			_slots.get_focus_owner().release_focus()
-			for s in _slots.get_children():
-				s.focus_mode = Control.FOCUS_NONE
-				s.actions.hide()
-			_flavor_text.bbcode_text = _WIN_TEXT
-			_flavor_panel.show()
+		_States.WIN:
+			_end(_WIN_TEXT)
+		_States.LOSE:
+			_end(_LOSE_TEXT)
+
+
+func _end(s:String) -> void:
+	var focus_owner:Control = _slots.get_focus_owner()
+	if focus_owner:
+		focus_owner.release_focus()
+	for s in _slots.get_children():
+		s.focus_mode = Control.FOCUS_NONE
+		s.actions.hide()
+	for e in _enemies.get_children():
+		e.button.focus_mode = Control.FOCUS_NONE
+		e.button.disabled = true
+	_flavor_text.bbcode_text = s
+	_flavor_panel.show()
 
 
 func _on_slot_focus_entered(slot:Button) -> void:
@@ -89,6 +105,7 @@ func _on_slot_focus_entered(slot:Button) -> void:
 		if not s == slot:
 			s.actions.hide()
 	slot.actions.show()
+	slot.attack.grab_focus()
 
 
 func _on_attack_pressed(s:Button) -> void:
@@ -96,12 +113,17 @@ func _on_attack_pressed(s:Button) -> void:
 	_change_state(_States.ATTACK)
 
 
+func _on_hero_died(s:Button) -> void:
+	_is_dead[s.get_index()] = true
+	if not false in _is_dead:
+		_change_state(_States.LOSE)
+
+
 func _on_enemy_attacked(enemy:Sprite) -> void:
 	_previously_attacked = enemy
-	_num_attacks += 1
 	_has_attacked[_attacker.get_index()] = true
 	enemy.damage(_attacker.data.attack_power)
-	if _num_attacks == _slots.get_child_count():
+	if not false in _has_attacked:
 		_change_state(_States.ENEMY)
 	else:
 		_change_state(_States.HERO)
@@ -110,6 +132,6 @@ func _on_enemy_attacked(enemy:Sprite) -> void:
 func _on_enemy_died(enemy:Sprite) -> void:
 	enemy.free()
 	if _enemies.get_child_count() == 0:
-		_change_state(_States.END)
+		_change_state(_States.WIN)
 	else:
 		_previously_attacked = _enemies.get_child(0)

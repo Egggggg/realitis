@@ -2,6 +2,7 @@ extends Button
 
 
 signal attack_pressed
+signal hero_died
 
 const _ICON_PATH = "res://battle/icons/%s.png"
 const _INFO_TEXT = \
@@ -24,8 +25,10 @@ func _ready() -> void:
 	
 	
 func damage(d:int) -> void:
-	data.health -= d
+	data.health = max(data.health - d, 0)
 	_info.bbcode_text = _INFO_TEXT % [data.name, data.health, data.max_health, data.mana, data.max_mana]
+	if data.health == 0:
+		emit_signal("hero_died")
 
 
 func _on_attack_pressed() -> void:
