@@ -10,12 +10,12 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Resource",
-"class": "Hero",
+"class": "Battler",
 "language": "GDScript",
-"path": "res://battle/scripts/hero.gd"
+"path": "res://battle/scripts/battler.gd"
 } ]
 _global_script_class_icons={
-"Hero": ""
+"Battler": ""
 }
 
 [application]
