@@ -1,0 +1,27 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://battle/scripts/battler.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+id = "Alex"
+health = 20
+rune = 0
+sadness = 0
+anger = 0
+joy = 0
+max_health = 20
+max_rune = 0
+max_sadness = 0
+max_anger = 0
+max_joy = 0
+h_attack = 0
+r_attack = 0
+s_attack = 0
+a_attack = 0
+j_attack = 0
+h_defense = 0
+r_defense = 0
+s_defense = 0
+a_defense = 0
+j_defense = 0

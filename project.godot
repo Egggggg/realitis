@@ -21,8 +21,12 @@ _global_script_class_icons={
 [application]
 
 config/name="Realitis"
-run/main_scene="res://battle/scripts/battle.tscn"
+run/main_scene="res://main/main.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Global="*res://main/global.gd"
 
 [display]
 

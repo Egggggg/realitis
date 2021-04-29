@@ -1,71 +1,14 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://battle/scripts/battle.gd" type="Script" id=1]
 [ext_resource path="res://theme/theme.tres" type="Theme" id=2]
-[ext_resource path="res://icon.png" type="Texture" id=3]
-[ext_resource path="res://battle/scripts/slot.tscn" type="PackedScene" id=4]
-[ext_resource path="res://battle/scripts/battler.gd" type="Script" id=5]
-[ext_resource path="res://battle/scripts/enemy.tscn" type="PackedScene" id=6]
+[ext_resource path="res://fonts/silver.ttf" type="DynamicFontData" id=4]
 
-[sub_resource type="Resource" id=1]
-resource_local_to_scene = true
-script = ExtResource( 5 )
-name = ""
-health = 20
-max_health = 20
-mana = 0
-max_mana = 0
-attack_power = 2
-
-[sub_resource type="Resource" id=2]
-resource_local_to_scene = true
-script = ExtResource( 5 )
-name = ""
-health = 20
-max_health = 20
-mana = 0
-max_mana = 0
-attack_power = 2
-
-[sub_resource type="Resource" id=3]
-resource_local_to_scene = true
-script = ExtResource( 5 )
-name = "Velvette"
-health = 20
-max_health = 20
-mana = 20
-max_mana = 20
-attack_power = 6
-
-[sub_resource type="Resource" id=4]
-resource_local_to_scene = true
-script = ExtResource( 5 )
-name = "William"
-health = 20
-max_health = 20
-mana = 20
-max_mana = 20
-attack_power = 6
-
-[sub_resource type="Resource" id=5]
-resource_local_to_scene = true
-script = ExtResource( 5 )
-name = "Alex"
-health = 20
-max_health = 20
-mana = 20
-max_mana = 20
-attack_power = 6
-
-[sub_resource type="Resource" id=6]
-resource_local_to_scene = true
-script = ExtResource( 5 )
-name = "Adam"
-health = 20
-max_health = 20
-mana = 20
-max_mana = 20
-attack_power = 6
+[sub_resource type="DynamicFont" id=1]
+size = 18
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 4 )
 
 [node name="Battle" type="Node"]
 script = ExtResource( 1 )
@@ -74,47 +17,33 @@ __meta__ = {
 }
 
 [node name="Sprites" type="Node2D" parent="."]
-
-[node name="Background" type="Sprite" parent="Sprites"]
-position = Vector2( 240, 135 )
-scale = Vector2( 7.5, 4.219 )
-texture = ExtResource( 3 )
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Enemies" type="Node2D" parent="Sprites"]
+[node name="Background" type="TextureRect" parent="Sprites"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 480.0
+margin_bottom = 270.0
+expand = true
+stretch_mode = 2
+__meta__ = {
+"_edit_lock_": true
+}
 
-[node name="Enemy" parent="Sprites/Enemies" instance=ExtResource( 6 )]
-position = Vector2( 120, 115 )
-data = SubResource( 1 )
+[node name="Enemies" type="Control" parent="Sprites"]
+margin_top = 160.0
+margin_bottom = 160.0
+__meta__ = {
+"_edit_lock_": true
+}
 
-[node name="Enemy2" parent="Sprites/Enemies" instance=ExtResource( 6 )]
-position = Vector2( 360, 115 )
-data = SubResource( 2 )
-
-[node name="Party" type="Node2D" parent="Sprites"]
+[node name="Heroes" type="Node2D" parent="Sprites"]
 position = Vector2( 0, 185 )
-
-[node name="Sprite" type="Sprite" parent="Sprites/Party"]
-position = Vector2( 60, 0 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 3 )
-
-[node name="Sprite2" type="Sprite" parent="Sprites/Party"]
-position = Vector2( 180, 0 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 3 )
-
-[node name="Sprite3" type="Sprite" parent="Sprites/Party"]
-position = Vector2( 300, 0 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 3 )
-
-[node name="Sprite4" type="Sprite" parent="Sprites/Party"]
-position = Vector2( 420, 0 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="UI" type="Control" parent="."]
 anchor_right = 1.0
@@ -126,8 +55,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FlavorPanel" type="PanelContainer" parent="UI"]
-visible = false
+[node name="TextPanel" type="PanelContainer" parent="UI"]
 anchor_right = 1.0
 anchor_bottom = 0.12
 margin_bottom = 14.0
@@ -136,16 +64,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FlavorText" type="RichTextLabel" parent="UI/FlavorPanel"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 473.0
-margin_bottom = 39.4
+[node name="Text" type="RichTextLabel" parent="UI/TextPanel"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 476.0
+margin_bottom = 42.4
 bbcode_enabled = true
-bbcode_text = "It's a flavor text!
-This is the second line."
-text = "It's a flavor text!
-This is the second line."
 scroll_active = false
 
 [node name="Party" type="PanelContainer" parent="UI"]
@@ -158,27 +82,17 @@ __meta__ = {
 }
 
 [node name="Slots" type="HBoxContainer" parent="UI/Party"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 473.0
-margin_bottom = 61.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 476.0
+margin_bottom = 64.0
 alignment = 1
 
-[node name="Slot" parent="UI/Party/Slots" instance=ExtResource( 4 )]
-data = SubResource( 3 )
-
-[node name="Slot2" parent="UI/Party/Slots" instance=ExtResource( 4 )]
-margin_left = 117.0
-margin_right = 231.0
-rect_pivot_offset = Vector2( 55, 156.5 )
-data = SubResource( 4 )
-
-[node name="Slot3" parent="UI/Party/Slots" instance=ExtResource( 4 )]
-margin_left = 235.0
-margin_right = 348.0
-data = SubResource( 5 )
-
-[node name="Slot4" parent="UI/Party/Slots" instance=ExtResource( 4 )]
-margin_left = 352.0
-margin_right = 466.0
-data = SubResource( 6 )
+[node name="Debug" type="Label" parent="UI"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
